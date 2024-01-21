@@ -4,8 +4,8 @@ using PokemonReviewApp.Dto;
 using PokemonReviewApp.Interfaces;
 using PokemonReviewApp.Models;
 using PokemonReviewApp.Repository;
+using System.Collections.Generic;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PokemonReviewApp.Controllers
 {
@@ -25,9 +25,9 @@ namespace PokemonReviewApp.Controllers
         // GET: api/<CategoryController>
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Category>))]
-        public IActionResult GetCategory()
+        public IActionResult GetCategories()
         {
-            var categories = _mapper.Map<List<CategoryDto>>(_categoryRepository.GetCategory);
+            var categories = _mapper.Map<List<CategoryDto>>(_categoryRepository.GetCategories());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -56,22 +56,21 @@ namespace PokemonReviewApp.Controllers
             return Ok(category);
         }
 
-        // POST api/<CategoryController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpGet("pokemon/{catId}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
+        [ProducesResponseType(400)]
+        public IActionResult GetPokemonsByCategoryId(int catId)
         {
+            var pokemons = _mapper.Map<List<PokemonDto>>(
+                _categoryRepository.GetPokemonsByCategory(catId));
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok(pokemons);
         }
 
-        // PUT api/<CategoryController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<CategoryController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
