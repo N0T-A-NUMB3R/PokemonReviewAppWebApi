@@ -39,7 +39,7 @@ namespace PokemonReviewApp.Controllers
         [HttpGet("{catId}")]
         [ProducesResponseType(200, Type = typeof(Category))]
         [ProducesResponseType(400)]
-        public string GetCategory(int catId)
+        public IActionResult GetCategory(int catId)
         {
             if (!_categoryRepository.CategoryExists(catId))
             {
