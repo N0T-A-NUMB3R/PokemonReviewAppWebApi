@@ -15,7 +15,8 @@ namespace PokemonReviewApp.Repository
 
         Owner IOwnerRepository.GetOwner(int ownerId)
         {
-            return _dataContext.Owners.SingleOrDefault(o => o.Id == id);        }
+            return _dataContext.Owners.SingleOrDefault(o => o.Id == ownerId);       
+        }
 
         ICollection<Owner> IOwnerRepository.GetOwnerOfAPokemon(int pokeId)
         {

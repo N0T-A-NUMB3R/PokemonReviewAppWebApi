@@ -1,4 +1,5 @@
-﻿using PokemonReviewApp.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PokemonReviewApp.Data;
 using PokemonReviewApp.Interfaces;
 using PokemonReviewApp.Models;
 
@@ -15,6 +16,40 @@ namespace PokemonReviewApp.Repository
         public ICollection<Pokemon> GetPokemons()
         {
             return _Context.Pokemons.OrderBy(p => p.Id).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _Context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
+
+        bool IPokemonRepository.CreatePokemon(int ownerId, int categoryId, Pokemon pokemon)
+        {
+            var pokemonOwnerEntity = _Context.Owners.FirstOrDefault(o => o.Id == ownerId);
+            var categories = _Context.Categories.FirstOrDefault(o => o.Id == categoryId);
+
+            var pokemonOwner = new PokemonOwner()
+            {
+                Owner = pokemonOwnerEntity,
+                Pokemon = pokemon,
+
+            };
+
+            _Context.Add(pokemonOwner);
+
+            var pokemonCategory = new PokemonCategory()
+            {
+                Category = categories,
+                Pokemon = pokemon,
+            };
+
+            _Context.Add(pokemonCategory);
+
+            _Context.Add(pokemon);
+
+            return Save();
+
         }
 
         Pokemon IPokemonRepository.GetPokemon(int PokeId)
