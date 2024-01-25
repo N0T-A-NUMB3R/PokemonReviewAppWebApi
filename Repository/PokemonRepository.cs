@@ -52,6 +52,13 @@ namespace PokemonReviewApp.Repository
 
         }
 
+        bool IPokemonRepository.DeletePokemon(Pokemon pokemon)
+        {
+            _Context.Remove(pokemon);
+            return Save();
+
+        }
+
         Pokemon IPokemonRepository.GetPokemon(int PokeId)
         {
             return _Context.Pokemons.Where(p => p.Id == PokeId).SingleOrDefault();
@@ -72,11 +79,26 @@ namespace PokemonReviewApp.Repository
             return review.Sum(r => r.Rating) / review.Count();
         }
 
-       
+        ICollection<Pokemon> IPokemonRepository.GetPokemons()
+        {
+            throw new NotImplementedException();
+        }
 
         bool IPokemonRepository.PokemonExists(int id)
         {
             return _Context.Pokemons.Any(p => p.Id == id);
+        }
+
+        bool IPokemonRepository.Save()
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IPokemonRepository.UpdatePokemon(Pokemon pokemon)
+        {
+            _Context.Update(pokemon);
+            return Save();
+
         }
     }
 }
