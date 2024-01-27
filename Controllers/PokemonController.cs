@@ -24,11 +24,11 @@ namespace PokemonReviewApp.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200,Type = typeof(IEnumerable<Pokemon>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
         public IActionResult GetPokemons()
         {
             var pokemons = _mapper.Map<List<PokemonDto>>(_pokemonRepository.GetPokemons());
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -39,9 +39,9 @@ namespace PokemonReviewApp.Controllers
         [HttpGet("{pokeId}")]
         [ProducesResponseType(200, Type = typeof(Pokemon))]
         [ProducesResponseType(400)]
-        public IActionResult GetPokemon (int pokeId)
+        public IActionResult GetPokemon(int pokeId)
         {
-            if(!_pokemonRepository.PokemonExists(pokeId))
+            if (!_pokemonRepository.PokemonExists(pokeId))
             {
                 return NotFound();
             }
@@ -89,10 +89,10 @@ namespace PokemonReviewApp.Controllers
                 .Where(c => c.Name.Trim().ToUpper() == pokemonCreate.Name.ToUpper())
                 .FirstOrDefault();
 
-            if (pokemons is  not null)
+            if (pokemons is not null)
             {
                 ModelState.AddModelError("", "Owner already exists");
-                return BadRequest(422);  
+                return BadRequest(422);
             }
 
             if (!ModelState.IsValid)
@@ -102,7 +102,7 @@ namespace PokemonReviewApp.Controllers
 
             var pokemonMap = _mapper.Map<Pokemon>(pokemonCreate);
 
-            if(! _pokemonRepository.CreatePokemon(ownerId,catId, pokemonMap))
+            if (!_pokemonRepository.CreatePokemon(ownerId, catId, pokemonMap))
             {
                 ModelState.AddModelError("", "Something went wrong while savin");
                 return StatusCode(500, ModelState);
@@ -115,7 +115,7 @@ namespace PokemonReviewApp.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdatePokemon (int pokeId, [FromBody] PokemonDto updatedPokemon)
+        public IActionResult UpdatePokemon(int pokeId, [FromBody] PokemonDto updatedPokemon)
         {
             if (updatedPokemon == null)
             {
@@ -149,7 +149,7 @@ namespace PokemonReviewApp.Controllers
         [ProducesResponseType(404)]
         public IActionResult UpdatePokemon(int pokeId)
         {
-            
+
 
             if (!_pokemonRepository.PokemonExists(pokeId))
             {
@@ -170,4 +170,5 @@ namespace PokemonReviewApp.Controllers
             }
             return Ok();
         }
+    }
 }
